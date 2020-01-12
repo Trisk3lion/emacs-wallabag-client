@@ -24,7 +24,21 @@
 
 ;;; Code:
 
+(defun wallabag-url (base-url path)
+  (format "%s/%s"
+    (s-chop-suffix "/" base-url)
+    (s-chop-prefix "/" path)))
 
+(defun wallabag-get-api-token (base-url client-id client-secret username password)
+  "Obtains a new Wallabag API access token."
+  (request
+    (wallabag-url "oauth/v2/token")
+    :type "POST"
+    :data `(("grant_type" . "password")
+            ("client_id" . ,client-id)
+            ("client_secret" . ,client-secret)
+            ("username" . ,username)
+            ("password" . ,password))))
 
 (provide 'wallabag)
 ;;; wallabag.el ends here
