@@ -32,8 +32,9 @@
 (defun wallabag-get-api-token (base-url client-id client-secret username password)
   "Obtains a new Wallabag API access token."
   (request
-    (wallabag-url "oauth/v2/token")
+    (wallabag-url base-url "oauth/v2/token")
     :type "POST"
+    :parser 'json-read
     :data `(("grant_type" . "password")
             ("client_id" . ,client-id)
             ("client_secret" . ,client-secret)
