@@ -52,9 +52,6 @@
   :group 'wallabag
   :type '(string))
 
-(defvar wallabag-cached-auth nil
-  "Cached Wallabag authentication data")
-
 (cl-defun wallabag-validate-connection-params ()
   "Validates that all necessary connection parameter
 are defined. Raises an error if validation fails."
@@ -89,10 +86,9 @@ are defined. Raises an error if validation fails."
 			    ("password" . ,wallabag-password)))))
     (when (not callback) response)))
 
-;; TODO support reauthentication when the access token expires
+;; TODO cache access token + reauthenticate when token expires
 (cl-defun wallabag-request (endpoint &key method callback form-data parser params)
-  "Makes a request to a Wallabag instance,
-authenticating if necessary"
+  "Makes a request to a Wallabag instance"
   (let ((make-request (cl-function
 		       (lambda (&key data &allow-other-keys)
 			 (let* ((access-token (alist-get 'access_token
@@ -109,16 +105,9 @@ authenticating if necessary"
 					    :parser (or parser 'json-read))))
 			   (when (not callback) response))))))
     (if callback
-	(if wallabag-cached-auth
-	    (funcall make-request :data wallabag-cached-auth)
-	  (wallabag-get-auth-data (cl-function
-				   (lambda (response)
-				     (setq wallabag-cached-auth (request-response-data response))
-				     (funcall make-request :data wallabag-cached-auth)))))
-      (when (not wallabag-cached-auth)
-	(setq wallabag-cached-auth (request-response-data
-				    (wallabag-get-auth-data))))
-      (funcall make-request :data wallabag-cached-auth))))
+	(wallabag-get-auth-data make-request)
+      (funcall make-request :data (request-response-data
+				   (wallabag-get-auth-data))))))
 
 ;; TODO handle paging (page size is 30 by default)
 ;;;###autoload
