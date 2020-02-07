@@ -121,12 +121,14 @@ authenticating if necessary"
       (funcall make-request :data wallabag-cached-auth))))
 
 ;; TODO handle paging (page size is 30 by default)
+;;;###autoload
 (cl-defun wallabag-entries (&optional callback)
   "Retrieves the list of Wallabag entries"
   (let ((response (wallabag-request "/api/entries.json"
 				    :callback callback)))
     (when (not callback) response)))
 
+;;;###autoload
 (cl-defun wallabag-add-entry (url &optional callback)
   "Adds a new Wallabag entry"
   (let ((response (wallabag-request "/api/entries.json"
@@ -135,6 +137,7 @@ authenticating if necessary"
 				    :callback callback)))
     (when (not callback) response)))
 
+;;;###autoload
 (cl-defun wallabag-delete-entry (id &optional callback)
   "Deletes a Wallabag entry"
   (let ((response (wallabag-request (format "/api/entries/%s.json" id)
