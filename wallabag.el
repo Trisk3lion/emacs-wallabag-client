@@ -4,6 +4,7 @@
 
 ;; Author: Jeremy Dormitzer <jeremy.dormitzer@gmail.com>
 ;; Keywords: tools, multimedia
+;; Package-Requires: ((request "0.3.2"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
