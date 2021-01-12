@@ -24,6 +24,14 @@
 ;; This is an Emacs client for the Wallabag read-later service.
 
 ;;; Code:
+
+;;;; Requirements
+
+(require 's)
+(require 'request)
+
+;;;; Customization
+
 (defgroup wallabag nil
   "Customization options for the Emacs Wallabag client")
 
